@@ -1,21 +1,24 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Customer} from '../services/customer';
-import { JsonPipe } from '@angular/common'; // 👈 1. Importer JsonPipe
+import {AsyncPipe, JsonPipe} from '@angular/common';
+import {Observable} from 'rxjs'; // 👈 1. Importer JsonPipe
 
 @Component({
-  imports: [JsonPipe], // 👈 2. L'ajouter dans le tableau imports
+  imports: [JsonPipe, AsyncPipe], // 👈 2. L'ajouter dans le tableau imports
   selector: 'app-customers',
   styleUrl: './customers.css',
   templateUrl: './customers.html',
 })
 export class Customers implements OnInit{
 
-  customers = signal<any[]>([]);
+  customers!: Observable<any>;
   errorMessage: string | undefined;
   private customerService = inject(Customer);
 
   ngOnInit(): void {
+    this.customers=this.customerService.getCustomers();
+    /*
     this.customerService.getCustomers().subscribe({
       next: (data) => {
         console.log('Données :', data);
@@ -26,6 +29,7 @@ export class Customers implements OnInit{
         this.errorMessage = error.message;
       }
     });
+     */
   }
 
 }
