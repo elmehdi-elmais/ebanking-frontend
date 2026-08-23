@@ -1,43 +1,52 @@
-<p>customers works!</p>
-
 <div class="container mt-2">
-  <div>
 
-    @if (errorMessage) {
-      <div class="alert alert-danger" role="alert">
-        {{ errorMessage }}
-      </div>
-    }
-  </div>
-  @if (customers != null) {
-
-  <div class="card">
-    <div class="card-header">
-      <h3>Customers</h3>
+  <!-- 1. Si une erreur s'est produite -->
+  @if (errorMessage) {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage }}
     </div>
-    <div class="card-body">
-      <table class="table">
-        <thead>
+  }
+  <!-- 2. Sinon, on tente de résoudre l'Observable -->
+  @else if (customers | async; as listCustomers) {
+    <div class="card">
+      <div class="card-header">
+        <h3>Customers</h3>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
           <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Actions</th>
           </tr>
-        </thead>
-        <tbody>
-          @for (customer of customers | async ; track customer.id) {
-          <tr>
-            <th scope="row">{{ customer.id }}</th>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.email }}</td>
-            <td>
-            </td>
-          </tr>
-        }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (customer of listCustomers; track customer.id) {
+              <tr>
+                <th scope="row">{{ customer.id }}</th>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.email }}</td>
+                <td></td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="text-center">Aucun client trouvé.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
   }
+  <!-- 3. Tant que l'Observable n'a rien émis et qu'il n'y a pas d'erreur = Chargement -->
+  @else {
+    {{ errorMessage }}
+
+    <div class="alert alert-info" role="alert">
+      Chargement des données en cours...
+    </div>
+  }
+
 </div>
