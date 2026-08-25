@@ -13,6 +13,18 @@
         <h3>Customers</h3>
       </div>
       <div class="card-body">
+        @if (searchFormGroup) {
+          {{ searchFormGroup.value|json }}
+        <form (ngSubmit)="handleSearchCustomers()" [formGroup]="searchFormGroup">
+          <div class="input-group">
+            <label class="input-group-text">Keyword:</label>
+            <input type="text" formControlName="keyword" class="form-control">
+            <button class="btn btn-info" >
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+        }
         <table class="table">
           <thead>
           <tr>
@@ -28,7 +40,11 @@
                 <th scope="row">{{ customer.id }}</th>
                 <td>{{ customer.name }}</td>
                 <td>{{ customer.email }}</td>
-                <td></td>
+                <td>
+                  <button (click)="handleDeleteCustomer(customer)" class="btn btn-danger">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
               </tr>
             } @empty {
               <tr>
