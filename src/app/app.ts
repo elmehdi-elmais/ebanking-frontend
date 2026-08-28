@@ -1,12 +1,18 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from "./navbar/navbar";
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from '@angular/common/http';
+import {appHttpInterceptor} from './interceptors/app-http-interceptor';
 
 @Component({
-  imports: [RouterOutlet, Navbar],
+  imports: [RouterOutlet],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
+  providers: [
+    //provideHttpClient(withInterceptors([appHttpInterceptor]))
+
+]
 })
 export class App {
   protected readonly title = signal('apps');
