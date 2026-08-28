@@ -2,20 +2,17 @@ import {inject, Service} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {jwtDecode} from 'jwt-decode';
 import {AppJwtPayload} from '../model/app-jwt-payload.model';
+import {Router} from '@angular/router';
 
 @Service()
 export class AuthService {
-  logout() {
-      this.isAuth = false;
-      this.accessToken = "";
-      this.username = undefined;
-      this.roles = [];
-  }
+
   isAuth: boolean = false;
   roles: Array<string> = new Array<string>() ;
   username!: string | undefined;
   accessToken!: string;
   private http: HttpClient = inject(HttpClient);
+  private router: Router = inject(Router);
   public login(username: string, password: string) {
 
     let options = {
@@ -45,5 +42,21 @@ export class AuthService {
     console.log(this.roles);
 
     // this.roles = decodeJwt.scope;
+  }
+
+  loadJwtTokenFromLocalStorage() {
+    let token = window.localStorage.getItem("jwt-token");
+    if (token) {
+      this.loadProfile({"access-token": token});
+      this.router.navigateByUrl("/admin/customers");
+    }
+  }
+  logout() {
+    this.isAuth = false;
+    this.accessToken = "";
+    this.username = undefined;
+    this.roles = [];
+    window.localStorage.removeItem("jwt-token");
+    this.router.navigateByUrl("/login");
   }
 }

@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from "./navbar/navbar";
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from '@angular/common/http';
 import {appHttpInterceptor} from './interceptors/app-http-interceptor';
+import {AuthService} from './services/auth.service';
 
 @Component({
   imports: [RouterOutlet],
@@ -14,6 +15,10 @@ import {appHttpInterceptor} from './interceptors/app-http-interceptor';
 
 ]
 })
-export class App {
+export class App  implements OnInit{
+  private authService: AuthService = inject(AuthService);
+  ngOnInit(): void {
+      this.authService.loadJwtTokenFromLocalStorage();
+  }
   protected readonly title = signal('apps');
 }
